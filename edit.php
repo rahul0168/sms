@@ -31,43 +31,57 @@ $id = $_GET['id']; // get id through query string
 
 $qry = mysqli_query($conn,"select * from std_info where id='$id'"); // select query
 
-$data = mysqli_fetch_array($qry); // fetch data
-$retrieved_majors = explode(",", $data['course']);
+$datas = mysqli_fetch_array($qry); // fetch data
+
 
 if(isset($_POST['update'])) // when click on Update button
 {
-    $fullname = $_POST['fullname'];
-    $age = $_POST['age'];
+    $stdname = $_POST['stdname'];
+    $dob = $_POST['dob'];
+    $gender = $_POST['gender'];
+    $telephone = $_POST['telephone'];
+    $email = $_POST['email'];
+    $city = $_POST['city'];
+    $nationality = $_POST['nationality'];
+    $course = $_POST['course'];
+
+    if (isset($_FILES['photo']['tmp_name'])) {
+        $file=$_FILES['photo']['tmp_name'];
+        $image= addslashes(file_get_contents($_FILES['photo']['tmp_name']));
+        $image_name= addslashes($_FILES['photo']['name']);
+        move_uploaded_file($_FILES["photo"]["tmp_name"],"all_images/" . $_FILES["photo"]["name"]);
+        $image_save ="all_images/" . $_FILES["photo"]["name"];
+        }
 	
-    $edit = mysqli_query($conn,"update std_info set fullname='$fullname', age='$age' where id='$id'");
+    $edit = mysqli_query($conn,"update std_info set stdname ='$stdname', dob='$dob' , gender='$gender', telephone='$telephone', email='$email', city='$city', nationality='$nationality', photo='$image_save',course='$course'where id='$id'");
 	
     if($edit)
     {
         mysqli_close($conn); // Close connection
-        header("location:all_records.php"); // redirects to all records page
+        header("location:list.php"); // redirects to all records page
         exit;
     }
     else
     {
-        echo mysqli_error();
+        //echo mysqli_error();
     }    	
 }
 
     
     ?>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
 
     <div class="row">
         <div class="text-center" style="font-weight: 600;font-size: 25px;">Form</div>
         <div class="col-md-6">
             <label>Student Full Name</label>
-            <input type="text" class="form-control" name="stdname" value="<?php echo $data['stdname'] ?>" id="inputEmail4" placeholder="Full Name">
+            <input type="text" class="form-control" name="stdname" value="<?php echo $datas['stdname'] ?>" id="inputEmail4" placeholder="Full Name">
             
         </div>
         <div class="col-md-6">
             <label>Date Of Birth</label>
 
-            <input type="date" class="form-control" id="inputEmail4" name="dob" value="<?php echo $data['dob'] ?>" placeholder="Email">
+            <input type="date" class="form-control" id="inputEmail4" name="dob" value="<?php echo $datas['dob'] ?>" placeholder="Email">
         </div>
     </div>
     <div class="row">
@@ -76,23 +90,23 @@ if(isset($_POST['update'])) // when click on Update button
             <label>Gender</label>
             <select id="inputState" class="form-control" name="gender">
                 <option  value="">Select</option>
-                <option value="male" <?php if( $data['gender'] == "male"){ echo"selected";} ?>> Male</option>
-                <option value="female" <?php if( $data['gender'] == "female"){ echo"selected";} ?>>Female</option>
-                <option value="others" <?php if( $data['gender'] == "others"){ echo"selected";} ?>>Others</option>
+                <option value="male" <?php if( $datas['gender'] == "male"){ echo"selected";} ?>> Male</option>
+                <option value="female" <?php if( $datas['gender'] == "female"){ echo"selected";} ?>>Female</option>
+                <option value="others" <?php if( $datas['gender'] == "others"){ echo"selected";} ?>>Others</option>
               </select>
             
         </div>
         <div class="col-md-6">
             <label>Telephone</label>
 
-            <input type="tel" class="form-control" id="inputEmail4" placeholder="Email" value="<?php echo $data['telephone'] ?>" name="telephone">
+            <input type="tel" class="form-control" id="inputEmail4" placeholder="Email" value="<?php echo $datas['telephone'] ?>" name="telephone">
         </div>
     </div>
     <div class="row">
        
         <div class="col-md-6">
             <label>Email</label>
-            <input type="email" class="form-control" id="inputEmail4" value="<?php echo $data['email'] ?>" placeholder="Email" name="email">
+            <input type="email" class="form-control" id="inputEmail4" value="<?php echo $datas['email'] ?>" placeholder="Email" name="email">
             
         </div>
         <div class="col-md-6">
@@ -100,8 +114,21 @@ if(isset($_POST['update'])) // when click on Update button
 
             <select id="inputState" class="form-control" name="city">
             <option value="">Option</option>
-                <option value="ponda" <?php if( $data['city'] == "ponda"){ echo"selected";} ?>> Ponda</option>
-                <option value="adpai" <?php if( $data['city'] == "adpai"){ echo"selected";} ?> > Adpai</option>
+            <?php
+       $db = mysqli_connect("localhost","root","","sms",3308);
+
+       if(!$db)
+       {  
+           die("Connection failed: " . mysqli_connect_error());
+       }
+        $records = mysqli_query($db, "SELECT id,city_name From city");  // Use select query here 
+
+
+        while($data = mysqli_fetch_array($records))
+        { ?>
+        <option value="<?php echo $data['city_name']; ?>"  <?php if( $data['city_name'] == $datas['city']){ echo"selected";} ?>><?php echo $data['city_name']; ?>  </option>
+      <?php  }	
+             ?> 
               </select>
         </div>
     </div>
@@ -112,8 +139,21 @@ if(isset($_POST['update'])) // when click on Update button
             <label>Nationality</label>
             <select id="inputState" class="form-control" name="nationality">
             <option value="">Select</option>
-                <option value="india" <?php if( $data['nationality'] == "india"){ echo"selected";} ?>> India</option>
-                <option value="Austria" <?php if( $data['nationality'] == "Austria"){ echo"selected";} ?>> Austria</option>
+            <?php
+       $db = mysqli_connect("localhost","root","","sms",3308);
+
+       if(!$db)
+       {  
+           die("Connection failed: " . mysqli_connect_error());
+       }
+        $records = mysqli_query($db, "SELECT id,country From country");  // Use select query here 
+
+
+        while($data = mysqli_fetch_array($records))
+        { ?>
+            <option value="<?php echo $data['country']; ?>"  <?php if( $data['country'] == $datas['nationality']){ echo"selected";} ?>><?php echo $data['country']; ?>  </option>
+          <?php  }	
+                 ?> 
               </select>
             
         </div>
@@ -121,13 +161,24 @@ if(isset($_POST['update'])) // when click on Update button
           
             <label>Course Selection</label>
 
-            <select id="inputState" class="form-control" multiple name="course[]">
-                <option value="">Option</option>
-                <option value="ponda"> Ponda</option>
-                <option value="adpai"> Adpai</option>
-               
-            <option value="ponda" <?php if(array_search($data['course'], $retrieved_majors) !== false) {echo 'selected';} ?> ><?php echo $data['course']; ?></option>
-            
+            <select id="inputState" class="form-control"  name="course">
+            <?php
+       $db = mysqli_connect("localhost","root","","sms",3308);
+
+       if(!$db)
+       {  
+           die("Connection failed: " . mysqli_connect_error());
+       }
+        $records = mysqli_query($db, "SELECT id,course From course");  // Use select query here 
+
+
+        while($data = mysqli_fetch_array($records))
+        { ?>
+            <option value="<?php echo $data['course']; ?>"  <?php if( $data['course'] == $datas['course']){ echo"selected";} ?>><?php echo $data['course']; ?>  </option>
+          <?php  }	
+                 ?> 
+                
+          
 
                
               </select>
@@ -137,7 +188,8 @@ if(isset($_POST['update'])) // when click on Update button
        
         <div class="col-md-6">
             <label>Photo</label><br>
-           <input type="file" name="photo" value="<?php echo $data['photo'] ?>">
+           <input type="file" name="photo" >
+          
             
         </div>
         
@@ -146,7 +198,7 @@ if(isset($_POST['update'])) // when click on Update button
        
         <div class="col-md-6">
             <br>
-           <input type="submit" class="btn btn-primary" name="submit">
+           <input type="submit" class="btn btn-primary" name="update">
             
         </div>
         
