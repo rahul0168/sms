@@ -22,13 +22,7 @@ integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+
     <div style="background: rgb(0, 162, 255); padding: 15px; color: aliceblue;font-weight: 600;font-size: 20px;">Student Mangement Sytem</div>
     <div class="container">
     <?php
-
-$db = mysqli_connect("localhost","root","","sms",3308);
-
-if(!$db)
-{  
-    die("Connection failed: " . mysqli_connect_error());
-}
+include 'db_con.php';
 
 if(isset($_POST['submit']))
 {		
@@ -69,30 +63,30 @@ if(isset($_POST['submit']))
     }
 }
 
-mysqli_close($db); // Close connection
+//mysqli_close($db); // Close connection
 ?>
-<form method="post" enctype="multipart/form-data">
+<form method="post" name="register" onsubmit="return vali();" id="register" enctype="multipart/form-data" >
 
     <div class="row">
         <div class="text-center" style="font-weight: 600;font-size: 25px;">Form</div>
         <div class="col-md-6">
             <label>Student Full Name</label>
-            <input type="text" class="form-control" name="stdname" id="inputEmail4" placeholder="Full Name">
+            <input type="text" class="form-control" name="stdname" id="stdname" placeholder="Full Name" onkeypress="return onlyAlphabets(event,this);">
             
         </div>
         <div class="col-md-6">
             <label>Date Of Birth</label>
 
-            <input type="date" class="form-control" id="inputEmail4" name="dob" placeholder="Email">
+            <input type="date" class="form-control" id="dob" name="dob" placeholder="Email">
         </div>
     </div>
     <div class="row">
        
         <div class="col-md-6">
             <label>Gender</label>
-            <select id="inputState" class="form-control" name="gender">
-                <option >Option</option>
-                <option>Male</option>
+            <select id="gender" class="form-control" name="gender">
+                <option value="">Select</option>
+                <option >Male</option>
                 <option>Female</option>
                 <option>Others</option>
               </select>
@@ -101,27 +95,23 @@ mysqli_close($db); // Close connection
         <div class="col-md-6">
             <label>Telephone</label>
 
-            <input type="tel" class="form-control" id="inputEmail4" placeholder="Email" name="telephone">
+            <input type="tel" class="form-control" id="telephone" placeholder="telephone" name="telephone" onkeypress="validate(event)">
         </div>
     </div>
     <div class="row">
        
         <div class="col-md-6">
             <label>Email</label>
-            <input type="email" class="form-control" id="inputEmail4" placeholder="Email" name="email">
+            <input type="email" class="form-control" id="email" placeholder="Email" name="email">
             
         </div>
         <div class="col-md-6">
             <label>City</label>
 
             <select id="inputState" class="form-control" name="city">
+            <option value="">Select</option>
             <?php
-       $db = mysqli_connect("localhost","root","","sms",3308);
-
-       if(!$db)
-       {  
-           die("Connection failed: " . mysqli_connect_error());
-       }
+       
         $records = mysqli_query($db, "SELECT id,city_name From city");  // Use select query here 
 
 
@@ -138,14 +128,10 @@ mysqli_close($db); // Close connection
        
         <div class="col-md-6">
             <label>Nationality</label>
-            <select id="inputState" class="form-control" name="nationality">
+            <select id="nationality" class="form-control" name="nationality">
+            <option value="">Select</option>
             <?php
-       $db = mysqli_connect("localhost","root","","sms",3308);
-
-       if(!$db)
-       {  
-           die("Connection failed: " . mysqli_connect_error());
-       }
+       
         $records = mysqli_query($db, "SELECT id,country From country");  // Use select query here 
 
 
@@ -158,16 +144,11 @@ mysqli_close($db); // Close connection
             
         </div>
         <div class="col-md-6">
-            <label>Course Selection</label>
+            <label>Course Selection</label><br>
 
-            <select  class="form-control mutiple-select" multiple name="course[]" id="course">
+            <select  class="form-control mutiple-select" multiple name="course[]" id="course" id="course">
             <?php
-       $db = mysqli_connect("localhost","root","","sms",3308);
-
-       if(!$db)
-       {  
-           die("Connection failed: " . mysqli_connect_error());
-       }
+      
         $records = mysqli_query($db, "SELECT id,course From course");  // Use select query here 
 
 
@@ -210,4 +191,128 @@ $(document).ready(function(){
 });  
 
 });
+
+function san()
+{
+document.getElementById("register").reset();
+}
+	function vali()
+{
+var stdname=document.register.stdname.value;
+if(stdname=="")
+{
+alert('please enter Full Name');
+
+document.register.stdname.focus();
+return false;
+}
+
+var dob=document.register.dob.value;
+if(dob=="")
+{
+alert('please enter date of birth');
+
+document.register.dob.focus();
+return false;
+}
+
+var gender=document.register.gender.value;
+if(gender=="")
+{
+alert('Select the gender  ');
+document.register.gender.focus()
+return false;
+}
+
+var telephone=document.register.telephone.value;
+if(telephone=="")
+{
+alert('Enter the telephone number ');
+document.register.telephone.focus()
+return false;
+}
+else
+{
+var pra=/^([0-9]{10,12})$/;
+if(pra.test(telephone)==false)
+{
+alert('enter valid telephone no');
+document.register.telephone.focus();
+return false; 
+}
+}
+var email=document.register.email.value;
+if(email=="")
+{
+alert('Enter Your email');
+document.register.email.focus();
+return false;
+}
+var city=document.register.city.value;
+if(city=="")
+{
+alert('Select Your city');
+document.register.city.focus();
+return false;
+}
+
+var nationality=document.register.nationality.value;
+if(nationality=="")
+{
+alert('Select Your nationality');
+document.register.nationality.focus();
+return false;
+}
+
+var course=document.register.course.value;
+if(course=="")
+{
+alert('Select Your course');
+document.register.course.focus();
+return false;
+}
+
+var photo=document.register.photo.value;
+if(photo=="")
+{
+alert('choose Your photo');
+document.register.photo.focus();
+return false;
+}
+}
+function onlyAlphabets(e, t) {
+            try {
+                if (window.event) {
+                    var charCode = window.event.keyCode;
+                }
+                else if (e) {
+                    var charCode = e.which;
+                }
+                else { return true; }
+                if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123))
+                    return true;
+                else
+                    return false;
+            }
+            catch (err) {
+                alert(err.Description);
+            }
+        }
+        function validate(evt) {
+  var theEvent = evt || window.event;
+
+  // Handle paste
+  if (theEvent.type === 'paste') {
+      key = event.clipboardData.getData('text/plain');
+  } else {
+  // Handle key press
+      var key = theEvent.keyCode || theEvent.which;
+      key = String.fromCharCode(key);
+  }
+  var regex = /[0-9]|\./;
+  if( !regex.test(key) ) {
+    theEvent.returnValue = false;
+    if(theEvent.preventDefault) theEvent.preventDefault();
+  }
+}
     </script> 

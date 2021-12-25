@@ -1,9 +1,9 @@
 <?php
 
-$db = mysqli_connect("localhost","root","","gcc","3308");
+$db = mysqli_connect("localhost","root","","sms");
 
 if(!$db)
-{  echo"<script>alert('hi'); </script>";
+{  
     die("Connection failed: " . mysqli_connect_error());
 }
 

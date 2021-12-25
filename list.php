@@ -10,7 +10,10 @@ integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jI
 integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+  
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 
 
 </head>
@@ -18,7 +21,8 @@ integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+
     <div style="background: rgb(0, 162, 255); padding: 15px; color: aliceblue;font-weight: 600;font-size: 20px;">Student Mangement Sytem</div>
     <div class="container"><br>
     <a href="index.php"><button class="btn btn-success">Add Student</button></a><br><br>
-    <table class="table table-bordered">
+    <a href="admin.php"><button class="btn btn-primary">Go Admin </button></a><br><br>
+    <table class="table table-bordered" id="myTable">
     <thead>
       <tr>
         <th scope="col">Fullname</th>
@@ -35,14 +39,9 @@ integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+
 
 
 // Create connection
-$conn = new mysqli("localhost", "root", "", "sms",3308);
-// Check connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
-
+include 'db_con.php';
 $sql = "SELECT * FROM std_info";
-$result = $conn->query($sql);
+$result = $db->query($sql);
 
 if ($result->num_rows > 0) {
   // output data of each row
@@ -66,10 +65,15 @@ if ($result->num_rows > 0) {
 } else {
   echo "0 results";
 }
-$conn->close();
+$db->close();
 ?>
     </tbody>
   </table> 
 </div>
 </body>
 </html>
+<script>
+  $(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>

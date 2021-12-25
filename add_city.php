@@ -24,13 +24,7 @@ integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+
     <div class="container">
         <form method="post">
         <?php
-
-$db = mysqli_connect("localhost","root","","sms",3308);
-
-if(!$db)
-{  
-    die("Connection failed: " . mysqli_connect_error());
-}
+include 'db_con.php';
 
 if(isset($_POST['submit']))
 {		

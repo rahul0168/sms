@@ -20,12 +20,7 @@ integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+
     <?php
 
 
-// Create connection
-$conn = new mysqli("localhost", "root", "", "sms",3308);
-// Check connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
+include 'db_con.php';
 
 $id = $_GET['id']; // get id through query string
 
@@ -115,12 +110,7 @@ if(isset($_POST['update'])) // when click on Update button
             <select id="inputState" class="form-control" name="city">
             <option value="">Option</option>
             <?php
-       $db = mysqli_connect("localhost","root","","sms",3308);
-
-       if(!$db)
-       {  
-           die("Connection failed: " . mysqli_connect_error());
-       }
+       
         $records = mysqli_query($db, "SELECT id,city_name From city");  // Use select query here 
 
 
@@ -140,12 +130,7 @@ if(isset($_POST['update'])) // when click on Update button
             <select id="inputState" class="form-control" name="nationality">
             <option value="">Select</option>
             <?php
-       $db = mysqli_connect("localhost","root","","sms",3308);
-
-       if(!$db)
-       {  
-           die("Connection failed: " . mysqli_connect_error());
-       }
+       
         $records = mysqli_query($db, "SELECT id,country From country");  // Use select query here 
 
 
@@ -163,12 +148,7 @@ if(isset($_POST['update'])) // when click on Update button
 
             <select id="inputState" class="form-control"  name="course">
             <?php
-       $db = mysqli_connect("localhost","root","","sms",3308);
-
-       if(!$db)
-       {  
-           die("Connection failed: " . mysqli_connect_error());
-       }
+       
         $records = mysqli_query($db, "SELECT id,course From course");  // Use select query here 
 
 
